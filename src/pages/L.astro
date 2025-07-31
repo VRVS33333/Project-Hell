@@ -1,0 +1,38 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const cookies = Object.fromEntries(
+  (Astro.request.headers.get('cookie') ?? '').split('; ').map(c => c.split('=').map(decodeURIComponent))
+);
+const user = cookies.user || null;
+
+if (user) {
+  return Astro.redirect('/Profile');
+}
+
+const url = new URL(Astro.request.url);
+const error = url.searchParams.get('error');
+const success = url.searchParams.get('success');
+---
+
+<Layout>
+  <a href="/" style="color: #4f46e5;">⬅ Home</a>
+  <h1>Login</h1>
+
+  {success === '1' && <p style="color: green;">✅ Login successful!</p>}
+  {error && <p style="color: red;">⚠️ {decodeURIComponent(error)}</p>}
+
+  <form action="/api/Login" method="POST" style="max-width:400px; margin:auto;">
+    <label>
+      Email: 
+      <input type="email" name="email" autocomplete="email" required style="width:100%; margin-top:4px;" />
+    </label>
+    <br/><br/>
+    <label>
+      Password: 
+      <input type="password" name="password" autocomplete="current-password" required style="width:100%; margin-top:4px;" />
+    </label>
+    <br/><br/>
+    <button type="submit">Login</button>
+  </form>
+</Layout>

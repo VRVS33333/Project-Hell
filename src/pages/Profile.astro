@@ -1,0 +1,84 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const cookies = Object.fromEntries(
+  (Astro.request.headers.get('cookie') ?? '').split('; ').map(c => c.split('=').map(decodeURIComponent))
+);
+const userEmail = cookies.user || null;
+
+if (!userEmail) {
+  return Astro.redirect('/L?error=Not%20logged%20in');
+}
+
+import { PrismaClient } from '@prisma/client';
+const prisma = new PrismaClient();
+
+const user = await prisma.user.findUnique({
+  where: { email: userEmail },
+  select: {
+    email: true,
+    firstName: true,
+    lastName: true,
+    phone: true,
+    company: true,
+    profilePic: true
+  },
+});
+
+const url = new URL(Astro.request.url);
+const success = url.searchParams.get('success');
+const error = url.searchParams.get('error');
+---
+
+<Layout>
+  <!-- Back to Home Link -->
+  <a href="/" style="display: inline-block; margin-bottom: 1rem; color: #4f46e5; font-weight: bold;">⬅ Back to Home</a>
+
+  <h1>Welcome, {user?.firstName ?? 'User'}!</h1>
+
+  {success && <p style="color: green;">✅ {decodeURIComponent(success)}</p>}
+  {error && <p style="color: red;">⚠️ {decodeURIComponent(error)}</p>}
+
+  <!-- Profile picture -->
+  <div style="margin: 1rem 0;">
+    <img
+      src={user.profilePic || '/default-avatar.png'}
+      alt="Profile Picture"
+      style="width:120px; height:120px; border-radius:50%; object-fit:cover; border: 2px solid #555;"
+    />
+  </div>
+
+  <!-- Upload profile picture -->
+  <form action="/api/UploadProfilePic" method="POST" enctype="multipart/form-data" style="margin-bottom: 2rem;">
+    <label>Upload New Profile Picture:
+      <input type="file" name="profilePic" accept="image/*" required />
+    </label>
+    <br/><br/>
+    <button type="submit">Upload</button>
+  </form>
+
+  <!-- Update profile info -->
+  <form action="/api/ProfileUpdate" method="POST" style="max-width:400px;">
+    <input type="hidden" name="email" value={user.email} />
+    <label>First Name:
+      <input type="text" name="firstName" value={user.firstName ?? ''} required />
+    </label><br/><br/>
+    <label>Last Name:
+      <input type="text" name="lastName" value={user.lastName ?? ''} required />
+    </label><br/><br/>
+    <label>Phone:
+      <input type="tel" name="phone" value={user.phone ?? ''} />
+    </label><br/><br/>
+    <label>Company:
+      <input type="text" name="company" value={user.company ?? ''} />
+    </label><br/><br/>
+    <button type="submit">Save Changes</button>
+  </form>
+
+  <!-- Logout -->
+  <form action="/api/Logout" method="POST" style="margin-top: 2rem;">
+    <button type="submit" style="background-color: red; color: white; padding: 10px 16px; border-radius: 8px;">
+      Logout
+    </button>
+  </form>
+</Layout>
