@@ -1,45 +1,24 @@
-# ─────🔧 Build output ─────
+# build output
 dist/
+
+# generated types
 .astro/
 
-# ─────📦 Dependencies ─────
+# dependencies
 node_modules/
 
-# ─────🔐 Environment Variables ─────
-.env
-.env.production
-
-# ─────📜 Logs ─────
+# logs
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 
-# ─────🍏 macOS ─────
+# environment variables
+.env
+.env.production
+
+# macOS-specific files
 .DS_Store
 
-# ─────🧠 JetBrains IDE ─────
+# jetbrains setting folder
 .idea/
-
-# ─────📁 Prisma ─────
-prisma/migrations/
-
-# ─────📦 Subject Models / Large Assets ─────
-models/
-data/
-datasets/
-*.csv
-*.json
-*.glb
-*.fbx
-*.mp4
-*.zip
-*.tar.gz
-*.pdf
-*.png
-*.jpg
-*.jpeg
-*.webp
-
-# ─────💻 VSCode settings (optional) ─────
-.vscode/
