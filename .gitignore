@@ -1,6 +1,7 @@
 # ─────🔧 Build output ─────
 dist/
 .astro/
+.vercel/output/
 
 # ─────📦 Dependencies ─────
 node_modules/
@@ -21,6 +22,9 @@ pnpm-debug.log*
 # ─────🧠 JetBrains IDE ─────
 .idea/
 
+# ─────💻 VSCode settings (optional) ─────
+.vscode/
+
 # ─────📁 Prisma ─────
 prisma/migrations/
 
@@ -40,6 +44,3 @@ datasets/
 *.jpg
 *.jpeg
 *.webp
-
-# ─────💻 VSCode settings (optional) ─────
-.vscode/
