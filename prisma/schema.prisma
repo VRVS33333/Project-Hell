@@ -1,20 +1,20 @@
-datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL") // Neon DB URL in .env
-}
-
 generator client {
   provider = "prisma-client-js"
 }
 
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
 model User {
-  id          String   @id @default(uuid())
-  email       String   @unique
-  password    String
-  firstName   String
-  lastName    String
-  phone       String
-  company     String
-  profilePic  String?  // Make sure this line is present
-  createdAt   DateTime @default(now())
+  id         String   @id @default(uuid())
+  email      String   @unique
+  password   String
+  firstName  String
+  lastName   String
+  phone      String
+  company    String
+  createdAt  DateTime @default(now())
+  profilePic String?
 }
